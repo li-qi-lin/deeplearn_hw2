@@ -77,9 +77,27 @@ class ReferenceInfoHandler:
             # 遍历 params 列表中的每个查询字典
             for index, params_dict in enumerate(self.params):
                 query_result = {}
-                query_result["cited_num"] = self.result[index]["organic_results"][0]["resources"][0]["link"]
+                query_result["pdf_download"] = self.result[index]["organic_results"][0]["resources"][0]["link"]
                 downloadpdf_dict[index] = query_result
             js = json.dumps(downloadpdf_dict, sort_keys=True, indent=4, separators=(',', ':'), ensure_ascii=False)
+            print(js)
+        except requests.RequestException as e:
+            print(f"请求出错: {e}")
+            return None, None
+        
+    def citations_api_code(self):
+        """
+        在 Google Scholar 上查询给定关键词的引用格式下载的API code
+        :return: 查询结果的标题和链接
+        """
+        citations_api_code = {}
+        try:
+            # 遍历 params 列表中的每个查询字典
+            for index, params_dict in enumerate(self.params):
+                query_result = {}
+                query_result["citations_api_code"] = self.result[index]["organic_results"][0]["result_id"]
+                citations_api_code[index] = query_result
+            js = json.dumps(citations_api_code, sort_keys=True, indent=4, separators=(',', ':'), ensure_ascii=False)
             print(js)
         except requests.RequestException as e:
             print(f"请求出错: {e}")
@@ -93,3 +111,4 @@ handler = ReferenceInfoHandler(ref_list)
 handler.search_title_and_url_on_google_scholar()
 handler.search_citations()
 handler.download_pdf()
+handler.citations_api_code()
