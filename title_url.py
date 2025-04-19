@@ -67,6 +67,24 @@ class ReferenceInfoHandler:
             print(f"请求出错: {e}")
             return None, None
 
+    def download_pdf(self):
+        """
+        在 Google Scholar 上查询给定关键词的pdf下载链接
+        :return: 查询结果的标题和链接
+        """
+        downloadpdf_dict = {}
+        try:
+            # 遍历 params 列表中的每个查询字典
+            for index, params_dict in enumerate(self.params):
+                query_result = {}
+                query_result["cited_num"] = self.result[index]["organic_results"][0]["resources"][0]["link"]
+                downloadpdf_dict[index] = query_result
+            js = json.dumps(downloadpdf_dict, sort_keys=True, indent=4, separators=(',', ':'), ensure_ascii=False)
+            print(js)
+        except requests.RequestException as e:
+            print(f"请求出错: {e}")
+            return None, None
+
 ref_list = [{'编号': '1', '作者': 'ZhaoweiCai,GukyeongKwon,AvinashRavichandran,ErhanBas,ZhuowenTu,RahulBhotika,andStefan0Soatto', 
   '文章名称': 'X-detr: A versatile architecture for instance-wise visionlanguagetasks', '期刊': 'ArXiv,abs/2204'},
    {'编号': '2', '作者': 'Ding-Jie Chen, Songhao Jia, Yi-Chen Lo, Hwann-Tzong Chen, and Tyng-Luh Liu', '文章名称': 'See-through-text'
@@ -74,3 +92,4 @@ ref_list = [{'编号': '1', '作者': 'ZhaoweiCai,GukyeongKwon,AvinashRavichandr
 handler = ReferenceInfoHandler(ref_list)
 handler.search_title_and_url_on_google_scholar()
 handler.search_citations()
+handler.download_pdf()
